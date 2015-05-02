@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>FC2_Download</title>
+	<style>
+	*{
+		margin: 0px;
+		padding: 0px;
+	}
+	p{
+		font-size: 20px;
+	}
+	div>h1 ,div>p, a>p 
+	{
+		display: inline;
+		margin:10px 0px 10px 20px;
+	}
+	#text{
+		width: 600px;
+		height: 200px;
+	}
+	.div1{
+		margin: 30px 0 0 0;
+
+	}
+	.top{
+		margin: 10px 0 0 30px;
+	}
+	.ass{
+		color: #fff;
+	    -webkit-animation-name: example; /* Chrome, Safari, Opera */
+	    -webkit-animation-duration: 2s; /* Chrome, Safari, Opera */
+	    animation-name: example;
+	    animation-duration: 2s;
+	}
+
+	/* Chrome, Safari, Opera */
+	@-webkit-keyframes example {
+	    0%   {color: #C4DFEE;}
+	    50%  {color: #61717A;}
+	    80%  {color: #61717A;}
+	    100% {color: #FFF;}
+	}
+
+	/* Standard syntax */
+	@keyframes example {
+	    0%   {color: #C4DFEE;}
+	    50%  {color: #61717A;}
+	    80%  {color: #61717A;}
+	    100% {color: #FFF;}
+	}
+</
+	</style>
+		<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script  language="JavaScript" src="md5.js"></script>
+</head>
+<body>
+<div class="top">
+	<a href="http://video.fc2.com/" target="_blank" style= "text-decoration: none" ><p>F2C影音--下載器(複製影片網址到下方↓↓↓)</p></a>
+</div>
+<div class="div1">
+	<h1>請輸入影片網址 :</h1>
+	<input type="text" id="input" placeholder="Enter here">
+	<input type="submit" onclick="send();" value="Retrive now!">
+</div>	
+<br>
+	<div id="text"></div>
+	<script>
+		
+		function mimi (str) {
+			var local = 'gGddgPfeaf_gzyr'
+			return calcMD5(((str+"_")+local));
+		}
+		
+		function send()
+		{
+			// console.log( $("#input").val());
+			var src = $("#input").val();
+
+			var upid = src.split("content/")[1];
+			
+			if(upid)
+			{
+				upid = upid.split("/")[0];
+				// console.log(upid);
+				upid = upid.split("&")[0];
+				// console.log(upid);
+				var b = mimi(upid);
+
+				$.ajax({
+					url:"curl.php",
+					data:{mimi:b,upid:upid},
+					type: 'POST',
+				}).done(function(data){
+					console.log(data);
+					if(data=="sorry")
+					{
+						$('#text').html("<p><b>Sorry your url is wrong or can't get response</b><p>")
+					}
+					else{
+						var path = data.split("&")[0].split("filepath=")[1];
+						var mid = data.split("&")[1];
+						// console.log(path+"?"+mid);
+						$('#text').html("<p class='ass'><b>Your vedio is now processing!!</b><p>")
+						setTimeout(function(){ $('#text').html("<a href="+path+"?"+mid+"><p><b>Download!</p></b></a><p style='font-size:16px;'>*點擊下載 或 右鍵另存連結</p>"); }, 2000);
+					}
+				});
+			}
+			else
+				$('#text').html("<p style='color:#D73202'><b>*Please try again!</b><p>")
+		}
+	</script>
+</body>
+</html>
